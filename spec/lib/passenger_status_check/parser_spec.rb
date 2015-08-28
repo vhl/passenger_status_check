@@ -1,5 +1,4 @@
 require 'spec_helper'
-require 'byebug'
 
 describe PassengerStatusCheck::Parser do
 
@@ -8,6 +7,7 @@ describe PassengerStatusCheck::Parser do
   end
 
   before(:each) do
+    @parser = status_check
     status_check.parse
     @report = status_check.build_report
   end
@@ -24,10 +24,28 @@ describe PassengerStatusCheck::Parser do
       expect(@report.requests_in_queue).to eq('8')
     end
 
-    it 'reports the process information' do
-      expect(@report.processes.first.memory).to eq('264508')
-      expect(@report.processes.first.cpu).to eq('0')
-      expect(@report.processes.first.last_time_request_handled).to eq('1440404826866466')
+    context 'given a process' do
+      before do
+        @process = @report.processes.first
+      end
+
+      it 'reports the cpu usage' do
+        expect(@process.cpu).to eq('0')
+      end
+
+      it 'reports the memory used' do
+        expect(@process.memory).to eq('264508')
+      end
+
+      it 'reports the last request time' do
+        expect(@process.last_request_time).to eq('1440404826866466')
+      end
+    end
+
+    context 'given active processes' do
+      it 'returns the number of processes' do
+        expect(@parser.process_count).to eq(2)
+      end
     end
   end
 end

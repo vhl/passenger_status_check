@@ -1,5 +1,5 @@
-require 'ox'
 require 'ostruct'
+require 'passenger_status_check/process'
 
 module PassengerStatusCheck
   class Parser
@@ -35,26 +35,31 @@ module PassengerStatusCheck
       # Create an array to hold process reporting
       report.processes = []
 
-      # process_list is an ox object containing all of the process nodes
-      process_list = @xml.locate("info/supergroups/supergroup/group/processes/process/")
+      report.processes = @xml.locate("info/supergroups/supergroup/group/processes/process/").map do |process_xml|
+        Process.new(process_xml)
+      end
 
-      process_list.each_with_index {|item, index|
-        # For each process node, add a new object to the processes key of the report object
-        report.processes.push(OpenStruct.new())
+      # process_list.each_with_index {|item, index|
+      #   # For each process node, add a new object to the processes key of the report object
+      #   report.processes.push(OpenStruct.new())
 
-        # Add stats to the process object
-        process_level_report_items.each do |process_item|
-          # Call the method with the name of process_item
-          # Assign the result to an oject key with the name of process_item
-          report.processes[index][process_item.to_s] =  self.send(process_item, item)
-        end
+      #   # Add stats to the process object
+      #   process_level_report_items.each do |process_item|
+      #     # Call the method with the name of process_item
+      #     # Assign the result to an oject key with the name of process_item
+      #     # report.processes[index][process_item.to_s] =  self.send(process_item, item)
+      #   end
 
-        # I think I might like this simple code below better...
-        # report.processes[index].memory = item.locate('rss/*').first
-        # report.processes[index].cpu = item.locate('cpu/*').first
-        # report.processes[index].last_time_request_handled = item.locate('last_used/*').first
-      }
+      #   # I think I might like this simple code below better...
+      #   # report.processes[index].memory = item.locate('rss/*').first
+      #   # report.processes[index].cpu = item.locate('cpu/*').first
+      #   # report.processes[index].last_time_request_handled = item.locate('last_used/*').first
+      # }
       report
+    end
+
+    def process_count
+      @xml.locate('info/supergroups/supergroup/group/processes/process').size
     end
 
     def requests_in_top_level_queue
@@ -66,21 +71,6 @@ module PassengerStatusCheck
       @xml.locate("info/supergroups/supergroup/group/get_wait_list_size/*").first
     end
     private :requests_in_queue
-
-    def memory(item)
-      item.locate('rss/*').first
-    end
-    private :memory
-
-    def cpu(item)
-      item.locate('cpu/*').first
-    end
-    private :cpu
-
-    def last_time_request_handled(item)
-      item.locate('last_used/*').first
-    end
-    private :last_time_request_handled
 
   end
 
