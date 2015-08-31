@@ -6,7 +6,8 @@ describe PassengerStatusCheck::Formatters::CheckMk do
   describe '#format' do
     before(:each) do
       @thresholds = { gqueue: 0, aqueue: 0, pcount: 2..2 }
-      @parser = PassengerStatusCheck::Parser.new('spec/fixtures/pass-status.xml')
+      data = File.read('spec/fixtures/pass-status.xml')
+      @parser = PassengerStatusCheck::Parser.new(data)
       @formatter = PassengerStatusCheck::Formatters::CheckMk.new(@parser, @thresholds)
     end
 

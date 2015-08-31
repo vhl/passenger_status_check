@@ -5,8 +5,8 @@ module PassengerStatusCheck
   class Parser
     attr_reader :xml
 
-    def initialize(file_path)
-      @data = File.read(file_path)
+    def initialize(data)
+      @data = data
     end
 
     def xml

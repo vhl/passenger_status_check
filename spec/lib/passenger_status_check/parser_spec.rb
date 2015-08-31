@@ -3,7 +3,8 @@ require 'spec_helper'
 describe PassengerStatusCheck::Parser do
 
   before(:each) do
-    @parser = PassengerStatusCheck::Parser.new('spec/fixtures/pass-status.xml')
+    data = File.read('spec/fixtures/pass-status.xml')
+    @parser = PassengerStatusCheck::Parser.new(data)
   end
 
   describe '#parse' do
