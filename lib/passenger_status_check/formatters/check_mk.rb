@@ -3,7 +3,7 @@ module PassengerStatusCheck
     class CheckMk
       attr_reader :parser
 
-      def initialize(parser)
+      def initialize(parser, thresholds)
         @parser = parser
       end
 
