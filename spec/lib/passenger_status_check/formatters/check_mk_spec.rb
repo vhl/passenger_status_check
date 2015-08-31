@@ -1,0 +1,23 @@
+require 'spec_helper'
+require 'passenger_status_check/formatters/check_mk'
+
+describe PassengerStatusCheck::Formatters::CheckMk do
+
+  describe '#format' do
+    before(:each) do
+      @parser = PassengerStatusCheck::Parser.new('spec/fixtures/pass-status.xml')
+      @formatter = PassengerStatusCheck::Formatters::CheckMk.new(@parser)
+    end
+
+    it 'generates output in the expected check_mk format' do
+      output = <<-TXT
+# Global_queue count=0 Global queue: 0
+# Application_queue count=8 Application queue: 8
+# Passenger_processes count=2 Passenger processes: 2
+# Passenger_8439 cpu=0|memory=264508|last_request_time=1440404826866466 Passenger pid 8439 cpu:0 memory:264508 last_request_time:1440404826866466
+# Passenger_8449 cpu=2|memory=439276|last_request_time=1440424552033587 Passenger pid 8449 cpu:2 memory:439276 last_request_time:1440424552033587
+      TXT
+      expect(@formatter.output).to eq(output)
+    end
+  end
+end
