@@ -2,17 +2,13 @@ require 'spec_helper'
 
 describe PassengerStatusCheck::Parser do
 
-  let(:status_check) do
-    PassengerStatusCheck::Parser.new('spec/fixtures/pass-status.xml')
-  end
-
   before(:each) do
-    @parser = status_check
+    @parser = PassengerStatusCheck::Parser.new('spec/fixtures/pass-status.xml')
   end
 
   describe '#parse' do
     it 'loads the XML file' do
-      expect(status_check.xml['version']).to eql('1.0')
+      expect(@parser.xml['version']).to eql('1.0')
     end
   end
 
