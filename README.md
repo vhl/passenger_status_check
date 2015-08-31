@@ -1,8 +1,12 @@
 # PassengerStatusCheck
 
-Welcome to your new gem! In this directory, you'll find the files you need to be able to package up your Ruby library into a gem. Put your Ruby code in the file `lib/passenger_status_check`. To experiment with that code, run `bin/console` for an interactive prompt.
+Provides a basic command-line tool to parse the output of the passenger-status
+utility, when generated as XML.  This is a jumping-off point, not a comprehensive
+solution.  Currently generates output in check_mk format (for Nagios), but can
+be easily extended for StatsD/Graphite, Elasticsearch, etc.
 
-TODO: Delete this and the text above, and describe your gem
+It is designed to read data from a stream/pipe, so if you're reading from a file,
+`cat` the output and pipe it in.
 
 ## Installation
 
@@ -22,7 +26,12 @@ Or install it yourself as:
 
 ## Usage
 
-TODO: Write usage instructions here
+After install, you can run passenger_status_check --help to see available options.
+To test it out, use the fixture in the spec file, like so:
+
+`cat spec/fixtures/pass-status.xml | passenger_status_check`
+
+This will generate check_mk-style output.
 
 ## Development
 
@@ -32,5 +41,4 @@ To install this gem onto your local machine, run `bundle exec rake install`. To 
 
 ## Contributing
 
-Bug reports and pull requests are welcome on GitHub at https://github.com/[USERNAME]/passenger_status_check.
-
+Bug reports and pull requests are welcome on GitHub at https://github.com/vhl/passenger_status_check.
