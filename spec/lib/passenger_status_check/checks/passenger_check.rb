@@ -40,25 +40,25 @@ describe PassengerStatusCheck::Checks::PassengerCheck do
     end
   end
 
-  describe '#process_number_check' do
+  describe '#process_count_check' do
     context 'when the values are in a certain range' do
       it 'returns an OK status' do
         allow(@parser).to receive(:process_count) { 2 }
-        expect(@passenger_check.process_number_check).to eq(0)
+        expect(@passenger_check.process_count_check).to eq(0)
       end
     end
 
     context 'when the values are below the range' do
       it 'returns a critical status' do
         allow(@parser).to receive(:process_count) { 1 }
-        expect(@passenger_check.process_number_check).to eq(2)
+        expect(@passenger_check.process_count_check).to eq(2)
       end
     end
 
     context 'when the values are below the range' do
       it 'returns a critical status' do
         allow(@parser).to receive(:process_count) { 3 }
-        expect(@passenger_check.process_number_check).to eq(2)
+        expect(@passenger_check.process_count_check).to eq(2)
       end
     end
   end

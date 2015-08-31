@@ -24,11 +24,11 @@ module PassengerStatusCheck
     end
 
     def requests_in_top_level_queue
-      xml.locate("info/get_wait_list_size/*").first
+      xml.locate("info/get_wait_list_size/*").first.to_i
     end
 
     def requests_in_app_queue
-      xml.locate("info/supergroups/supergroup/group/get_wait_list_size/*").first
+      xml.locate("info/supergroups/supergroup/group/get_wait_list_size/*").first.to_i
     end
   end
 end

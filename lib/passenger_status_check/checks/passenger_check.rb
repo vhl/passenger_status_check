@@ -24,7 +24,7 @@ module PassengerStatusCheck
         end
       end
 
-      def process_number_check
+      def process_count_check
         if @thresholds[:pcount].include?(@parser.process_count)
           OK
         else

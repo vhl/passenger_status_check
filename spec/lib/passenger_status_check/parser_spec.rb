@@ -20,13 +20,13 @@ describe PassengerStatusCheck::Parser do
 
   describe '#requests_in_top_level_queue' do
     it 'returns the number of requests in the global queue' do
-      expect(@parser.requests_in_top_level_queue).to eq('0')
+      expect(@parser.requests_in_top_level_queue).to eq(0)
     end
   end
 
   describe '#requests_in_app_queue' do
     it 'returns the number of requests backed up in the app queue' do
-      expect(@parser.requests_in_app_queue).to eq('8')
+      expect(@parser.requests_in_app_queue).to eq(8)
     end
   end
 
