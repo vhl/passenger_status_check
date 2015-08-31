@@ -2,6 +2,7 @@ require 'ox'
 require "passenger_status_check/version"
 require 'passenger_status_check/parser'
 require 'passenger_status_check/formatters/check_mk'
+require 'passenger_status_check/formatters/graphite'
 
 module PassengerStatusCheck
 
