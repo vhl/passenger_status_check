@@ -4,6 +4,10 @@ module PassengerStatusCheck
       @process_xml = process_xml
     end
 
+    def pid
+      @process_xml.locate('pid/*').first
+    end
+
     def memory
       @process_xml.locate('rss/*').first
     end

@@ -45,6 +45,10 @@ describe PassengerStatusCheck::Parser do
         @process = @parser.processes.first
       end
 
+      it 'reports the pid' do
+        expect(@process.pid).to eql('8439')
+      end
+
       it 'reports the cpu usage' do
         expect(@process.cpu).to eq('0')
       end

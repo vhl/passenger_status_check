@@ -8,6 +8,10 @@ describe PassengerStatusCheck::Process do
       @process = PassengerStatusCheck::Process.new(@process_xml)
     end
 
+    it 'exposes the PID' do
+      expect(@process.pid).to eql('8439')
+    end
+
     it 'exposes cpu info' do
       expect(@process.cpu).to eql('0')
     end
