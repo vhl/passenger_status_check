@@ -1,0 +1,54 @@
+#!/usr/bin/env ruby
+
+require 'passenger_status_check'
+require 'optparse'
+require 'pp'
+
+
+# Default thresholds
+# - global queue: 0
+# - app queue: 0
+# - processes: 10
+
+options = {
+  formatter: :check_mk,
+  thresholds: {
+    gqueue: 0,
+    aqueue: 0,
+    pcount: 10..10
+  }
+}
+
+OptionParser.new do |opts|
+  opts.banner = 'Usage: passenger_status_check [options]'
+
+  opts.on_tail('-v', '--version', 'Show version') do
+    puts "passenger_status_check v#{PassengerStatusCheck::VERSION}"
+    exit
+  end
+
+  opts.on('-f', '--formatter=f', 'Specify formatter') do |f|
+    options[:formatter] = f
+  end
+
+  opts.on('--gq', '--global-queue=gq', 'Specify global queue size') do |gq|
+    options[:thresholds][:gqueue] = gq
+  end
+
+  opts.on('--aq', '--app-queue=aq', 'Specify application queue size') do |aq|
+    options[:thresholds][:aqueue] = aq
+  end
+
+  opts.on('--pc', '--process-count=[lo,hi]', Array, 'Specify process count size') do |list|
+    raise ArgumentError, "Specify a lower and upper bound for the process count" if list.size != 2
+
+    pc = (list.first.to_i)..(list.last.to_i)
+    options[:thresholds][:pcount] = pc
+  end
+end.parse!
+
+passenger_xml = ARGF.read.chomp
+
+pp passenger_status_check = PassengerStatusCheck.run(options[:formatter],
+                                                  options[:thresholds],
+                                                  passenger_xml)
