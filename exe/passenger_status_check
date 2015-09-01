@@ -49,6 +49,6 @@ end.parse!
 
 passenger_xml = ARGF.read.chomp
 
-pp passenger_status_check = PassengerStatusCheck.run(options[:formatter],
+print passenger_status_check = PassengerStatusCheck.run(options[:formatter],
                                                   options[:thresholds],
                                                   passenger_xml)
