@@ -39,13 +39,12 @@ module PassengerStatusCheck
       end
 
       def process_data
-        ''.tap do |s|
-          @parser.processes.each do |process|
-            s << "0 Passenger_#{process.pid} cpu=#{process.cpu}|memory=#{process.memory}|" +
-                 "last_request_time=#{process.last_request_time} Passenger pid #{process.pid} " +
-                 "cpu:#{process.cpu} memory:#{process.memory} last_request_time:#{process.last_request_time}\n"
-          end
-        end
+        '0 Passenger_workers '.tap do |s|
+          s << @parser.processes.map.with_index do |process, i|
+            "p#{i}_cpu=#{process.cpu}|p#{i}_memory=#{process.memory}|" +
+            "p#{i}_last_request_time=#{process.last_request_time}"
+          end.join('|')
+        end << "\n"
       end
     end
   end
