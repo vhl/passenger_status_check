@@ -13,6 +13,8 @@ module PassengerStatusCheck
 
   def self.formatter_class(formatter)
     klass = formatter.to_s.split('_').map(&:capitalize).join
-    const_get("PassengerStatusCheck::Formatters::#{klass}")
+    ["PassengerStatusCheck", "Formatters", klass].inject(Object) do |constant, name|
+      constant.const_get(name)
+    end
   end
 end
