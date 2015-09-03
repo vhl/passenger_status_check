@@ -44,7 +44,7 @@ module PassengerStatusCheck
             "p#{i}_cpu=#{process.cpu}|p#{i}_memory=#{process.memory}|" +
             "p#{i}_last_request_time=#{process.last_request_time}"
           end.join('|')
-        end << "\n"
+        end << " Passenger worker details\n"
       end
     end
   end
