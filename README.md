@@ -42,3 +42,9 @@ To install this gem onto your local machine, run `bundle exec rake install`. To 
 ## Contributing
 
 Bug reports and pull requests are welcome on GitHub at https://github.com/vhl/passenger_status_check.
+
+## License
+
+GNU General Public License version 3 or later
+
+See `COPYING` for the full license text.
