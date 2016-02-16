@@ -51,8 +51,7 @@ module PassengerStatusCheck
     end
 
     def resisting_deployment
-      nodes = xml.locate("info/supergroups/supergroup/group/resisting_deployment_error/")
-      nodes[0]
+      xml.locate("info/supergroups/supergroup/group/resisting_deployment_error/").size
     end
   end
 end

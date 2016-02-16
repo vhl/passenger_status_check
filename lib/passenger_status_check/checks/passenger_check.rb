@@ -52,7 +52,7 @@ module PassengerStatusCheck
       end
 
       def resisting_deployment_check
-        if @parser.resisting_deployment.nil?
+        if @parser.resisting_deployment == 0
           OK
         else
           CRITICAL
