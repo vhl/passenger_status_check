@@ -23,6 +23,7 @@ module PassengerStatusCheck
   module Formatters
     class CheckMk
       attr_reader :parser
+      STATUS_LOOKUP = { 0 => 'OK', 1 => 'WARNING', 2 => 'CRITICAL', 3 => 'UNKNOWN' }.freeze
 
       def initialize(parser, thresholds)
         @parser = parser
@@ -39,6 +40,7 @@ module PassengerStatusCheck
           s << application_queue
           s << passenger_processes
           s << process_data
+          s << resisting_deployment
         end
       end
 
@@ -64,6 +66,11 @@ module PassengerStatusCheck
             "p#{i}_last_request_time=#{process.last_request_time}"
           end.join('|')
         end << " Passenger worker details\n"
+      end
+
+      def resisting_deployment
+        status = passenger_check.resisting_deployment_check
+        "#{status} Passenger_resisting_deployment_status - #{STATUS_LOOKUP[status]}\n"
       end
     end
   end

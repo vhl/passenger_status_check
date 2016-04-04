@@ -50,6 +50,14 @@ module PassengerStatusCheck
           CRITICAL
         end
       end
+
+      def resisting_deployment_check
+        if @parser.resisting_deployment == 0
+          OK
+        else
+          CRITICAL
+        end
+      end
     end
   end
 end

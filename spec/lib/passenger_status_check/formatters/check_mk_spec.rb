@@ -17,6 +17,7 @@ describe PassengerStatusCheck::Formatters::CheckMk do
 2 Application_queue count=8 Application queue: 8
 0 Passenger_processes count=2 Passenger processes: 2
 0 Passenger_workers p0_cpu=0|p0_memory=264508|p0_last_request_time=1440404826866466|p1_cpu=2|p1_memory=439276|p1_last_request_time=1440424552033587 Passenger worker details
+0 Passenger_resisting_deployment_status - OK
       TXT
       expect(@formatter.output).to eq(output)
     end

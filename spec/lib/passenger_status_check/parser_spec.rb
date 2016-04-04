@@ -59,4 +59,10 @@ describe PassengerStatusCheck::Parser do
       end
     end
   end
+
+  describe '#resisting_deployment' do
+    it 'returns the number of resisting-deployment elements' do
+      expect(@parser.resisting_deployment).to eq(0)
+    end
+  end
 end
