@@ -18,5 +18,5 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 module PassengerStatusCheck
-  VERSION = "0.1.3"
+  VERSION = "0.1.4"
 end
