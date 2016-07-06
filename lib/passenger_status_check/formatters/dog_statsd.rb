@@ -17,24 +17,17 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-require 'passenger_status_check/checks/passenger_check'
+require_relative 'base'
 require 'statsd'
 
 module PassengerStatusCheck
   module Formatters
-    class DogStatsd
-      attr_reader :parser
-      #STATUS_LOOKUP = { 0 => 'OK', 1 => 'WARNING', 2 => 'CRITICAL', 3 => 'UNKNOWN' }.freeze
+    class DogStatsd < Base
 
       def initialize(parser, thresholds)
-        @parser = parser
-        @thresholds = thresholds
         # Statsd instance should be created, if possible, once for the duration of the process
         @statsd = Statsd.new('localhost', 8125)
-      end
-
-      def passenger_check
-        @passenger_check ||= PassengerStatusCheck::Checks::PassengerCheck.new(@parser, @thresholds)
+        super(parser, thresholds)
       end
 
       def output
@@ -48,7 +41,7 @@ module PassengerStatusCheck
            stats.histogram("passenger.process_#{i}.last_request_time", process.last_request_time, tags: tags)
          end
          status = passenger_check.resisting_deployment_check
-         stats.event('passenger.resisting_deployment_status', CheckMk::STATUS_LOOKUP[status], tags: tags)
+         stats.event('passenger.resisting_deployment_status', STATUS_LOOKUP[status], tags: tags)
         end
       end
 

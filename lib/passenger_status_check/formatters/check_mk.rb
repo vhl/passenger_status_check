@@ -16,23 +16,13 @@
 #
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
+#
 
-require 'passenger_status_check/checks/passenger_check'
+require_relative './base'
 
 module PassengerStatusCheck
   module Formatters
-    class CheckMk
-      attr_reader :parser
-      STATUS_LOOKUP = { 0 => 'OK', 1 => 'WARNING', 2 => 'CRITICAL', 3 => 'UNKNOWN' }.freeze
-
-      def initialize(parser, thresholds)
-        @parser = parser
-        @thresholds = thresholds
-      end
-
-      def passenger_check
-        @passenger_check ||= PassengerStatusCheck::Checks::PassengerCheck.new(@parser, @thresholds)
-      end
+    class CheckMk < Base
 
       def output
         ''.tap do |s|
@@ -48,16 +38,19 @@ module PassengerStatusCheck
         requests = parser.requests_in_top_level_queue
         "#{passenger_check.global_queue_check} Global_queue count=#{requests} Global queue: #{requests}\n"
       end
+      private :global_queue
 
       def application_queue
         requests = parser.requests_in_app_queue
         "#{passenger_check.app_queue_check} Application_queue count=#{requests} Application queue: #{requests}\n"
       end
+      private :application_queue
 
       def passenger_processes
         process_count = parser.process_count
         "#{passenger_check.process_count_check} Passenger_processes count=#{process_count} Passenger processes: #{process_count}\n"
       end
+      private :passenger_processes
 
       def process_data
         '0 Passenger_workers '.tap do |s|
@@ -67,11 +60,13 @@ module PassengerStatusCheck
           end.join('|')
         end << " Passenger worker details\n"
       end
+      private :process_data
 
       def resisting_deployment
         status = passenger_check.resisting_deployment_check
         "#{status} Passenger_resisting_deployment_status - #{STATUS_LOOKUP[status]}\n"
       end
+      private :process_data
     end
   end
 end
