@@ -25,9 +25,10 @@ module PassengerStatusCheck
       attr_reader :parser
       STATUS_LOOKUP = { 0 => 'OK', 1 => 'WARNING', 2 => 'CRITICAL', 3 => 'UNKNOWN' }.freeze
 
-      def initialize(parser, thresholds)
+      def initialize(parser, thresholds, options = {})
         @parser = parser
         @thresholds = thresholds
+        @options = options
       end
 
       def passenger_check

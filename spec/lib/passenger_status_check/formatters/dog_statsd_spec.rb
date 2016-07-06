@@ -7,13 +7,12 @@ describe PassengerStatusCheck::Formatters::DogStatsd do
     let(:data) { File.read('spec/fixtures/pass-status.xml') }
     let(:parser) { PassengerStatusCheck::Parser.new(data) }
     let(:thresholds) { { gqueue: 0, aqueue: 0, pcount: 2..2 } }
-    let(:formatter) { described_class.new(parser, thresholds) }
+    let(:formatter) { described_class.new(parser, thresholds, tags: tags) }
     let(:tags) { ['testing'] }
 
     before do
       allow(statsd).to receive(:batch).and_yield(statsd)
       allow(Statsd).to receive(:new).and_return(statsd)
-      allow(formatter).to receive(:tags).and_return(tags)
     end
 
     it 'sends global queue count metrics' do

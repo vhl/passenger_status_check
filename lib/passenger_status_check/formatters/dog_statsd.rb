@@ -24,32 +24,27 @@ module PassengerStatusCheck
   module Formatters
     class DogStatsd < Base
 
-      def initialize(parser, thresholds)
+      def initialize(parser, thresholds, options)
         # Statsd instance should be created, if possible, once for the duration of the process
         @statsd = Statsd.new('localhost', 8125)
-        super(parser, thresholds)
+        super(parser, thresholds, options)
       end
 
       def output
         @statsd.batch do |stats|
-         stats.histogram('passenger.global_queue.count', parser.requests_in_top_level_queue, tags: tags)
-         stats.histogram('passenger.application_queue.count', parser.requests_in_app_queue, tags: tags)
-         stats.histogram('passenger.processes.count', parser.process_count, tags: tags)
+         stats.gauge('passenger.global_queue.count', parser.requests_in_top_level_queue, tags: @options[:tags])
+         stats.gauge('passenger.application_queue.count', parser.requests_in_app_queue, tags: @options[:tags])
+         stats.gauge('passenger.processes.count', parser.process_count, tags: @options[:tags])
          parser.processes.map.with_index do |process, i|
-           stats.histogram("passenger.process_#{i}.cpu", process.cpu, tags: tags)
-           stats.histogram("passenger.process_#{i}.memory", process.memory, tags: tags)
-           stats.histogram("passenger.process_#{i}.last_request_time", process.last_request_time, tags: tags)
+           tags = @options[:tags] + ["process_id:#{i}"]
+           stats.gauge("passenger.process.cpu", process.cpu, tags: tags)
+           stats.gauge("passenger.process.memory", process.memory, tags: tags)
+           stats.gauge("passenger.process.last_request_time", process.last_request_time, tags: tags)
          end
          status = passenger_check.resisting_deployment_check
-         stats.event('passenger.resisting_deployment_status', STATUS_LOOKUP[status], tags: tags)
+         stats.service_check('passenger.resisting_deployment_status', status, message: "Passenger resisting deployment #{STATUS_LOOKUP[status]}")
         end
       end
-
-      def tags
-        # Currently it has not been defined how the tags on Datadog will be setup.
-        ['testing', 'to_be_defined']
-      end
-      private :tags
     end
   end
 end

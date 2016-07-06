@@ -24,9 +24,9 @@ require 'passenger_status_check/formatters/check_mk'
 
 module PassengerStatusCheck
 
-  def self.run(formatter_name, thresholds, data)
+  def self.run(formatter_name, thresholds, data, formatter_options = {})
     parser = PassengerStatusCheck::Parser.new(data)
-    formatter = formatter_class(formatter_name).new(parser, thresholds)
+    formatter = formatter_class(formatter_name).new(parser, thresholds, formatter_options)
     formatter.output
   end
 
