@@ -16,32 +16,32 @@ describe PassengerStatusCheck::Formatters::DogStatsd do
     end
 
     it 'sends global queue count metrics' do
-      expect(statsd).to receive(:histogram).with('passenger.global_queue.count', 0, tags: tags)
+      expect(statsd).to receive(:gauge).with('passenger.global_queue.count', 0, tags: tags)
       formatter.output
     end
 
     it 'sends application queue count metrics' do
-      expect(statsd).to receive(:histogram).with('passenger.application_queue.count', 8, tags: tags)
+      expect(statsd).to receive(:gauge).with('passenger.application_queue.count', 8, tags: tags)
       formatter.output
     end
 
     it 'sends passenger process count metrics' do
-      expect(statsd).to receive(:histogram).with('passenger.processes.count', 2, tags: tags)
+      expect(statsd).to receive(:gauge).with('passenger.processes.count', 2, tags: tags)
       formatter.output
     end
 
     it 'sends passenger workers stats' do
-      expect(statsd).to receive(:histogram).with("passenger.process_0.cpu", '0', tags: tags)
-      expect(statsd).to receive(:histogram).with("passenger.process_0.memory", '264508', tags: tags)
-      expect(statsd).to receive(:histogram).with("passenger.process_0.last_request_time", '1440404826866466', tags: tags)
-      expect(statsd).to receive(:histogram).with("passenger.process_1.cpu", '2', tags: tags)
-      expect(statsd).to receive(:histogram).with("passenger.process_1.memory", '439276', tags: tags)
-      expect(statsd).to receive(:histogram).with("passenger.process_1.last_request_time", '1440424552033587', tags: tags)
+      (0..1).each do |process_id|
+        expected_tags = tags + ["process_id:#{process_id}"]
+        expect(statsd).to receive(:gauge).with("passenger.process.cpu", /\d/, tags: expected_tags)
+        expect(statsd).to receive(:gauge).with("passenger.process.memory", /\d+/, tags: expected_tags)
+        expect(statsd).to receive(:gauge).with("passenger.process.last_request_time", /\d+/, tags: expected_tags)
+      end
       formatter.output
     end
 
     it 'sends passenger resisting deployment stats' do
-      expect(statsd).to receive(:event).with('passenger.resisting_deployment_status', 'OK', tags: tags)
+      expect(statsd).to receive(:service_check).with('passenger.resisting_deployment_status', 0, message: 'Passenger resisting deployment OK')
       formatter.output
     end
   end
