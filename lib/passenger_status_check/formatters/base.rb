@@ -17,23 +17,27 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-require 'ox'
-require "passenger_status_check/version"
-require 'passenger_status_check/parser'
-require 'passenger_status_check/formatters/check_mk'
+require 'passenger_status_check/checks/passenger_check'
 
 module PassengerStatusCheck
+  module Formatters
+    class Base
+      attr_reader :parser
+      STATUS_LOOKUP = { 0 => 'OK', 1 => 'WARNING', 2 => 'CRITICAL', 3 => 'UNKNOWN' }.freeze
 
-  def self.run(formatter_name, thresholds, data, formatter_options = {})
-    parser = PassengerStatusCheck::Parser.new(data)
-    formatter = formatter_class(formatter_name).new(parser, thresholds, formatter_options)
-    formatter.output
-  end
+      def initialize(parser, thresholds, options = {})
+        @parser = parser
+        @thresholds = thresholds
+        @options = options
+      end
 
-  def self.formatter_class(formatter)
-    klass = formatter.to_s.split('_').map(&:capitalize).join
-    ["PassengerStatusCheck", "Formatters", klass].inject(Object) do |constant, name|
-      constant.const_get(name)
+      def passenger_check
+        @passenger_check ||= PassengerStatusCheck::Checks::PassengerCheck.new(@parser, @thresholds)
+      end
+
+      def output
+        raise 'output must be defined on the concrete classes.'
+      end
     end
   end
 end

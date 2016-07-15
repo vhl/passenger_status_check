@@ -34,8 +34,10 @@ options = {
     gqueue: 0,
     aqueue: 0,
     pcount: 10..10
-  }
+  },
+  formatter_options: { tags: ['testing'] }
 }
+# Currently it has not been defined how the tags on Datadog will be setup.
 
 OptionParser.new do |opts|
   opts.banner = 'Usage: passenger_status_check [options]'
@@ -63,10 +65,16 @@ OptionParser.new do |opts|
     pc = (list.first.to_i)..(list.last.to_i)
     options[:thresholds][:pcount] = pc
   end
+
+  opts.on('--tg', '--tags=[tag_1,tag_2]', Array, 'Specify tags to be used in Datadog') do |list|
+    raise ArgumentError, "Specify tags to be used in Datadog" if list.empty?
+    options[:formatter_options][:tags] = list
+  end
 end.parse!
 
 passenger_xml = ARGF.read.chomp
 
 print passenger_status_check = PassengerStatusCheck.run(options[:formatter],
                                                   options[:thresholds],
-                                                  passenger_xml)
+                                                  passenger_xml,
+                                                  options[:formatter_options])
