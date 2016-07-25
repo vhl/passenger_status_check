@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="iso8859-1"?>
+<info version="3">
+   <passenger_version>5.0.20</passenger_version>
+   <group_count>0</group_count>
+   <process_count>0</process_count>
+   <max>22</max>
+   <capacity_used>0</capacity_used>
+   <get_wait_list_size>0</get_wait_list_size>
+   <supergroups/>
+</info>

@@ -39,6 +39,39 @@ class TestParser(unittest.TestCase):
         parser = self.setup_parser()
         self.assertEqual(2, len(parser.processes()))
 
+# Where no processes have spawned.
+class TestParserNoProcesses(unittest.TestCase):
+    def setup_parser(self):
+        test_data = open('tests/fixtures/pass-status-no-processes.xml', 'r').read()
+        parser = Parser(test_data)
+        parser.parse()
+        return parser
+
+    # returns the number of active processes.
+    def test_process_count(self):
+        parser = self.setup_parser()
+        self.assertEqual(0, parser.process_count())
+
+    # returns the number of requests in the global queue.
+    def test_requests_in_top_level_queue(self):
+        parser = self.setup_parser()
+        self.assertEqual(0, parser.requests_in_top_level_queue())
+
+    # returns the number of requests backed up in the app queue.
+    def test_requests_in_app_queue(self):
+        parser = self.setup_parser()
+        self.assertEqual(0, parser.requests_in_app_queue())
+
+    # returns the number of resisting-deployment elements.
+    def test_resisting_deployment(self):
+        parser = self.setup_parser()
+        self.assertEqual(0, parser.resisting_deployment())
+    
+    # contains the correct number of processes.
+    def test_processes_count(self):
+        parser = self.setup_parser()
+        self.assertEqual(0, len(parser.processes()))
+
 
 class TestProcess(unittest.TestCase):
     def setup_process(self):

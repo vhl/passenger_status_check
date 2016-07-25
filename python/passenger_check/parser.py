@@ -13,10 +13,12 @@ class Parser:
         return len(self.root_node.findall('./supergroups/supergroup/group/processes/process'))
         
     def requests_in_top_level_queue(self):
-        return int(self.root_node.find('get_wait_list_size').text)
+        xml = self.root_node.find('get_wait_list_size')
+        return self.__safe_xml_value(xml)
 
     def requests_in_app_queue(self):
-        return int(self.root_node.find('./supergroups/supergroup/group/get_wait_list_size').text)
+        xml = self.root_node.find('./supergroups/supergroup/group/get_wait_list_size')
+        return self.__safe_xml_value(xml)
 
     def resisting_deployment(self):
         return len(self.root_node.findall('./supergroups/supergroup/group/resisting_deployment_error'))
@@ -24,3 +26,9 @@ class Parser:
     def processes(self):
         return map((lambda process_xml: Process(process_xml)), self.root_node.findall('./supergroups/supergroup/group/processes/process'))
 
+    def __safe_xml_value(self, value)
+        result = 0
+        if value is not None:
+            result = int(value.text)
+        return result
+        
