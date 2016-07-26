@@ -27,8 +27,5 @@ class Parser:
         return map((lambda process_xml: Process(process_xml)), self.root_node.findall('./supergroups/supergroup/group/processes/process'))
 
     def __safe_xml_value(self, value):
-        result = 0
-        if value is not None:
-            result = int(value.text)
-        return result
+        return int(getattr(value, 'text', 0))
         
