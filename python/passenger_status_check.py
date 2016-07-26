@@ -16,6 +16,7 @@ class PassengerStatusCheck(AgentCheck):
         self.gauge('passenger.global_queue.count', parser.requests_in_top_level_queue())
         self.gauge('passenger.application_queue.count', parser.requests_in_app_queue())
         self.gauge('passenger.processes.count', parser.process_count())
+        self.gauge('passenger.resisting_deployment.count', parser.resisting_deployment())
         for index, process in enumerate(parser.processes()):
             process_tags = ['process_id:' + str(index)]
             self.gauge('passenger.process.cpu', process.cpu(), tags=process_tags)
