@@ -1,0 +1,4 @@
+#!/bin/sh
+# install into /sbin/
+
+exec sudo -i -u deploy rvmsudo passenger-status "$@"

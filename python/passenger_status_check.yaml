@@ -2,5 +2,4 @@ init_config:
   min_collection_interval: 0
 
 instances:
-  - command: sudo -i -u deploy rvmsudo passenger-status --show=xml
-
+  [{}]

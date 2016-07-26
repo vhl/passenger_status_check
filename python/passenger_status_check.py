@@ -1,6 +1,6 @@
 from checks import AgentCheck
 from passenger_check.parser import Parser
-import shlex, subprocess
+import subprocess
 
 # need to add this to the sudoers file:
 # dd-agent    ALL=(deploy) NOPASSWD: /bin/bash
@@ -9,8 +9,7 @@ import shlex, subprocess
 
 class PassengerStatusCheck(AgentCheck):
     def check(self, instance):
-        args = shlex.split(instance.get('command'))
-        xml_data = subprocess.Popen(args, stdout=subprocess.PIPE).communicate()[0]
+        xml_data = subprocess.Popen(['passenger-status', '--show=xml'], stdout=subprocess.PIPE).communicate()[0]
         parser = Parser(xml_data)
         parser.parse()
         self.gauge('passenger.global_queue.count', parser.requests_in_top_level_queue())
