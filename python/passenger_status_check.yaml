@@ -2,4 +2,5 @@ init_config:
   min_collection_interval: 0
 
 instances:
-  [{}]
+  instances:
+    - command: passenger-status

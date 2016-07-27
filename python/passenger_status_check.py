@@ -9,7 +9,7 @@ import subprocess
 
 class PassengerStatusCheck(AgentCheck):
     def check(self, instance):
-        xml_data = subprocess.Popen(['passenger-status', '--show=xml'], stdout=subprocess.PIPE).communicate()[0]
+        xml_data = subprocess.Popen([instance.get('command'), '--show=xml'], stdout=subprocess.PIPE).communicate()[0]
         parser = Parser(xml_data)
         parser.parse()
         self.gauge('passenger.global_queue.count', parser.requests_in_top_level_queue())
